@@ -1,0 +1,2005 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package makatihomes;
+
+import javax.swing.JRootPane;
+import javax.swing.plaf.basic.BasicInternalFrameUI;
+import java.io.File;
+import javax.swing.*;
+import static java.lang.Thread.sleep;
+import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.design.JRDesignQuery;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.engine.export.JRXlsExporter;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import net.sf.jasperreports.view.JasperViewer;
+import com.twilio.Twilio;
+import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.type.PhoneNumber;
+/**
+ *
+ * @author GameDev
+ */
+public class Tenants extends javax.swing.JInternalFrame {
+    Connection conn = null;
+    ResultSet rs = null;
+    PreparedStatement pst = null;
+    public static final String ACCOUNT_SID = "AC9cccf2c67541dab6eaef384e516d388a";
+     public static final String AUTH_TOKEN = "ecfd96d905a7d2e4a42118f669dbec3e";
+    /**
+     * Creates new form Tenants
+     */
+    public Tenants() {
+        initComponents();
+        conn=javaconnect.connectdb();
+        removetitlebar();
+        BuildingCombo();
+        UnitCombo();
+        Date();
+    }
+    public void removetitlebar(){
+        putClientProperty("JInternalFrame.isPalette", Boolean.TRUE);
+        getRootPane().setWindowDecorationStyle(JRootPane.NONE);
+        ((BasicInternalFrameUI) this.getUI()).setNorthPane(null);
+        this.setBorder(null);
+    }
+        private void BuildingCombo(){
+        try{
+            String sql = "Select * from buildings";
+            pst = conn.prepareStatement(sql);
+            rs = pst.executeQuery(sql);
+            while(rs.next()){
+                String buildingname = rs.getString("buildingName");
+                buildingcombo.addItem(buildingname);
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null,e);
+        }
+    }
+    private void UnitCombo(){
+        unitcombo.removeAllItems();
+        try{
+           String buildingcmb = buildingcombo.getSelectedItem().toString();
+           String unit = "Select * from buildingunits where buildingName ='"+buildingcmb+"' and unitStatus = 'vacant'";
+           pst = conn.prepareStatement(unit);
+           rs = pst.executeQuery(unit);
+           while(rs.next()){
+               String unitnumber = rs.getString("unitNumber");  
+               unitcombo.addItem(unitnumber);
+           }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+        private void CSDisable(){
+        if(civilbox.getSelectedItem().toString().equals("Single") || civilbox.getSelectedItem().toString().equals("Widowed")){
+            nos.setEnabled(false);
+            occus.setEnabled(false);
+            nocs.setEnabled(false);
+            contacts.setEnabled(false);
+            soes.setEnabled(false);
+            osois.setEnabled(false);
+            nod.setEnabled(false);
+            ic2.setEnabled(false);
+            nos.setText("Not Applicable");
+            occus.setText("Not Applicable");
+            nocs.setText("Not Applicable");
+            contacts.setText("Not Applicable");
+            soes.setText("Not Applicable");
+            osois.setText("Not Applicable");
+            nod.setText("Not Applicable");
+        }else{
+            nos.setEnabled(true);
+            occus.setEnabled(true);
+            nocs.setEnabled(true);
+            contacts.setEnabled(true);
+            soes.setEnabled(true);
+            osois.setEnabled(true);
+            nod.setEnabled(true);
+            ic2.setEnabled(true);
+            nos.setText("");
+            occus.setText("");
+            nocs.setText("");
+            contacts.setText("");
+            soes.setText("");
+            osois.setText("");
+            nod.setText("");
+        }
+    }
+            public void Date(){
+        Calendar cal = new GregorianCalendar();
+        int month = cal.get(Calendar.MONTH);
+        int year = cal.get(Calendar.YEAR);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        datesss =year+"-"+(month+1)+"-"+day;
+        date.setText(year+"-"+(month+1)+"-"+day);
+    }
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        buttonGroup1 = new javax.swing.ButtonGroup();
+        buttonGroup2 = new javax.swing.ButtonGroup();
+        buttonGroup3 = new javax.swing.ButtonGroup();
+        buttonGroup4 = new javax.swing.ButtonGroup();
+        buttonGroup5 = new javax.swing.ButtonGroup();
+        buttonGroup6 = new javax.swing.ButtonGroup();
+        buttonGroup7 = new javax.swing.ButtonGroup();
+        buttonGroup8 = new javax.swing.ButtonGroup();
+        buttonGroup9 = new javax.swing.ButtonGroup();
+        buttonGroup10 = new javax.swing.ButtonGroup();
+        buttonGroup11 = new javax.swing.ButtonGroup();
+        buttonGroup12 = new javax.swing.ButtonGroup();
+        jPanel1 = new javax.swing.JPanel();
+        tab = new javax.swing.JTabbedPane();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        buildingcombo = new javax.swing.JComboBox<>();
+        unitcombo = new javax.swing.JComboBox<>();
+        jLabel3 = new javax.swing.JLabel();
+        oldnew = new javax.swing.JComboBox<>();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        datestart = new javax.swing.JTextField();
+        dateend = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        fname = new javax.swing.JTextField();
+        mname = new javax.swing.JTextField();
+        lname = new javax.swing.JTextField();
+        contact = new javax.swing.JTextField();
+        dob = new javax.swing.JTextField();
+        occu = new javax.swing.JTextField();
+        noc = new javax.swing.JTextField();
+        soe = new javax.swing.JTextField();
+        osoi = new javax.swing.JTextField();
+        jLabel17 = new javax.swing.JLabel();
+        civilbox = new javax.swing.JComboBox<>();
+        genderbox = new javax.swing.JComboBox<>();
+        jButton1 = new javax.swing.JButton();
+        listtenants = new javax.swing.JButton();
+        date = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        jLabel20 = new javax.swing.JLabel();
+        jLabel21 = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
+        jLabel23 = new javax.swing.JLabel();
+        jLabel24 = new javax.swing.JLabel();
+        nos = new javax.swing.JTextField();
+        occus = new javax.swing.JTextField();
+        nocs = new javax.swing.JTextField();
+        contacts = new javax.swing.JTextField();
+        soes = new javax.swing.JTextField();
+        osois = new javax.swing.JTextField();
+        nod = new javax.swing.JTextField();
+        jButton2 = new javax.swing.JButton();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel25 = new javax.swing.JLabel();
+        jLabel26 = new javax.swing.JLabel();
+        twomonth = new javax.swing.JCheckBox();
+        onemonth = new javax.swing.JCheckBox();
+        twomonthsadvancetxt = new javax.swing.JTextField();
+        onemonthdeposittxt = new javax.swing.JTextField();
+        totalrent = new javax.swing.JTextField();
+        jLabel27 = new javax.swing.JLabel();
+        useadv = new javax.swing.JCheckBox();
+        usedpt = new javax.swing.JCheckBox();
+        dateadv = new javax.swing.JTextField();
+        datedpt = new javax.swing.JTextField();
+        jLabel28 = new javax.swing.JLabel();
+        jLabel29 = new javax.swing.JLabel();
+        jLabel30 = new javax.swing.JLabel();
+        jLabel31 = new javax.swing.JLabel();
+        jLabel32 = new javax.swing.JLabel();
+        jLabel33 = new javax.swing.JLabel();
+        jLabel34 = new javax.swing.JLabel();
+        jLabel35 = new javax.swing.JLabel();
+        jLabel36 = new javax.swing.JLabel();
+        jLabel37 = new javax.swing.JLabel();
+        c1 = new javax.swing.JRadioButton();
+        c2 = new javax.swing.JRadioButton();
+        c3 = new javax.swing.JRadioButton();
+        c4 = new javax.swing.JRadioButton();
+        c5 = new javax.swing.JRadioButton();
+        c6 = new javax.swing.JRadioButton();
+        c7 = new javax.swing.JRadioButton();
+        c8 = new javax.swing.JRadioButton();
+        c9 = new javax.swing.JRadioButton();
+        c10 = new javax.swing.JRadioButton();
+        ic2 = new javax.swing.JRadioButton();
+        ic7 = new javax.swing.JRadioButton();
+        save = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+
+        tab.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel1.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel1.setText("Building:");
+
+        jLabel2.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel2.setText("Units:");
+
+        buildingcombo.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        buildingcombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Building" }));
+        buildingcombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buildingcomboActionPerformed(evt);
+            }
+        });
+
+        unitcombo.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        unitcombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Unit" }));
+        unitcombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                unitcomboActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel3.setText("Tenants:");
+
+        oldnew.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        oldnew.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select", "Old", "New" }));
+        oldnew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                oldnewActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel4.setText("Date Start:");
+
+        jLabel5.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel5.setText("Date End:");
+
+        datestart.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                datestartKeyReleased(evt);
+            }
+        });
+
+        jLabel6.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("First Name:");
+
+        jLabel7.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel7.setText("Middle Name:");
+
+        jLabel8.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel8.setText("Last Name:");
+
+        jLabel9.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel9.setText("Contact:");
+
+        jLabel10.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel10.setText("Civil Status:");
+
+        jLabel11.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel11.setText("Date of Birth:");
+
+        jLabel12.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel12.setText("Gender:");
+
+        jLabel13.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel13.setText("Occupation:");
+
+        jLabel14.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel14.setText("Name of Company:");
+
+        jLabel15.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel15.setText("Status of Employment:");
+
+        jLabel16.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel16.setText("Other Source of Income:");
+
+        contact.setText("+63");
+
+        dob.setText("yyyy-MM-dd");
+
+        occu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                occuActionPerformed(evt);
+            }
+        });
+
+        noc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nocActionPerformed(evt);
+            }
+        });
+
+        soe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                soeActionPerformed(evt);
+            }
+        });
+
+        osoi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                osoiActionPerformed(evt);
+            }
+        });
+
+        jLabel17.setFont(new java.awt.Font("Tempus Sans ITC", 1, 18)); // NOI18N
+        jLabel17.setForeground(new java.awt.Color(255, 51, 51));
+        jLabel17.setText("Add Tenants");
+
+        civilbox.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        civilbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Civil Status", "Single", "Married", "Widowed" }));
+        civilbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                civilboxActionPerformed(evt);
+            }
+        });
+
+        genderbox.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        genderbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Gender", "Male", "Female" }));
+
+        jButton1.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/makatihomes/Images/next.png"))); // NOI18N
+        jButton1.setText("Next");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        listtenants.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        listtenants.setForeground(new java.awt.Color(255, 51, 51));
+        listtenants.setIcon(new javax.swing.ImageIcon(getClass().getResource("/makatihomes/Images/tenantslist.png"))); // NOI18N
+        listtenants.setText("List of Tenants");
+        listtenants.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                listtenantsActionPerformed(evt);
+            }
+        });
+
+        date.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        date.setText("Date");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(buildingcombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(unitcombo, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(35, 35, 35)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(oldnew, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(datestart)
+                                    .addComponent(dateend, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(164, 164, 164)
+                                .addComponent(listtenants))
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jButton1)
+                                .addGroup(jPanel2Layout.createSequentialGroup()
+                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel15, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(fname)
+                                        .addComponent(mname)
+                                        .addComponent(lname)
+                                        .addComponent(contact)
+                                        .addComponent(dob, javax.swing.GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE)
+                                        .addComponent(occu)
+                                        .addComponent(noc)
+                                        .addComponent(soe)
+                                        .addComponent(osoi)
+                                        .addComponent(civilbox, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(genderbox, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(398, 398, 398)
+                        .addComponent(jLabel17)
+                        .addGap(143, 143, 143)
+                        .addComponent(date)))
+                .addGap(0, 101, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel17)
+                    .addComponent(date))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(buildingcombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(oldnew, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(listtenants))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2)
+                        .addComponent(unitcombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(datestart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(dateend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(fname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(mname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(lname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(contact, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(civilbox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(dob, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(genderbox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel13)
+                    .addComponent(occu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel14)
+                    .addComponent(noc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel15)
+                    .addComponent(soe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel16)
+                    .addComponent(osoi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        tab.addTab("Tenants Information", jPanel2);
+
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel18.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel18.setText("Name of Spouse:");
+
+        jLabel19.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel19.setText("Occupation:");
+
+        jLabel20.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel20.setText("Name of Company:");
+
+        jLabel21.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel21.setText("Contact:");
+
+        jLabel22.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel22.setText("Status of Employment:");
+
+        jLabel23.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel23.setText("Other Source of Income:");
+
+        jLabel24.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel24.setText("Number of Dependent:");
+
+        nos.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+
+        occus.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+
+        nocs.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+
+        contacts.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+
+        soes.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+
+        osois.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+
+        nod.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+
+        jButton2.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/makatihomes/Images/next.png"))); // NOI18N
+        jButton2.setText("Next");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton2)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel23, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel24, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel22, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel21, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel20, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(nos, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(occus, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(nocs, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(contacts, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(soes, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(osois, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(nod, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(225, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel18)
+                    .addComponent(nos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel19)
+                    .addComponent(occus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel20)
+                    .addComponent(nocs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel21)
+                    .addComponent(contacts, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel22)
+                    .addComponent(soes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel23)
+                    .addComponent(osois, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel24)
+                    .addComponent(nod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton2)
+                .addContainerGap(276, Short.MAX_VALUE))
+        );
+
+        tab.addTab("Spouse", jPanel3);
+
+        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel25.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel25.setText("Deposit");
+
+        jLabel26.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel26.setText("Advance Payment:");
+
+        twomonth.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        twomonth.setText("Two Month Deposit");
+        twomonth.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                twomonthActionPerformed(evt);
+            }
+        });
+
+        onemonth.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        onemonth.setText("One Month Advance");
+        onemonth.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                onemonthActionPerformed(evt);
+            }
+        });
+
+        twomonthsadvancetxt.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        twomonthsadvancetxt.setEnabled(false);
+
+        onemonthdeposittxt.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        onemonthdeposittxt.setEnabled(false);
+
+        totalrent.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        totalrent.setEnabled(false);
+
+        jLabel27.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel27.setText("Total:");
+
+        useadv.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        useadv.setText("Date Used:");
+        useadv.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                useadvActionPerformed(evt);
+            }
+        });
+
+        usedpt.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        usedpt.setText("Date Used:");
+        usedpt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                usedptActionPerformed(evt);
+            }
+        });
+
+        dateadv.setText("yyyy-MM-dd");
+        dateadv.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        dateadv.setEnabled(false);
+
+        datedpt.setText("yyyy-MM-dd");
+        datedpt.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        datedpt.setEnabled(false);
+
+        jLabel28.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel28.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel28.setText("GSIS/SSS:");
+
+        jLabel29.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel29.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel29.setText("Marriage Contract:");
+
+        jLabel30.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel30.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel30.setText("Income Tax Return:");
+
+        jLabel31.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel31.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel31.setText("Voters Affidavit:");
+
+        jLabel32.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel32.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel32.setText("Certificate of Employment:");
+
+        jLabel33.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel33.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel33.setText("Barangay Certificate:");
+
+        jLabel34.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel34.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel34.setText("Family Picture:");
+
+        jLabel35.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel35.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel35.setText("Birth Certificate:");
+
+        jLabel36.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel36.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel36.setText("Cedula:");
+
+        jLabel37.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jLabel37.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel37.setText("Latest Payslip:");
+
+        buttonGroup1.add(c1);
+        c1.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        c1.setText("Complete");
+
+        buttonGroup2.add(c2);
+        c2.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        c2.setText("Complete");
+
+        buttonGroup3.add(c3);
+        c3.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        c3.setText("Complete");
+
+        buttonGroup4.add(c4);
+        c4.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        c4.setText("Complete");
+
+        buttonGroup5.add(c5);
+        c5.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        c5.setText("Complete");
+
+        buttonGroup6.add(c6);
+        c6.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        c6.setText("Complete");
+
+        buttonGroup7.add(c7);
+        c7.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        c7.setText("Complete");
+
+        buttonGroup8.add(c8);
+        c8.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        c8.setText("Complete");
+
+        buttonGroup9.add(c9);
+        c9.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        c9.setText("Complete");
+
+        buttonGroup10.add(c10);
+        c10.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        c10.setText("Complete");
+
+        buttonGroup2.add(ic2);
+        ic2.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        ic2.setText("Incomplete");
+
+        buttonGroup7.add(ic7);
+        ic7.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        ic7.setText("Incomplete");
+
+        save.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        save.setIcon(new javax.swing.ImageIcon(getClass().getResource("/makatihomes/Images/save.png"))); // NOI18N
+        save.setText("Save");
+        save.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveActionPerformed(evt);
+            }
+        });
+
+        jButton4.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/makatihomes/Images/clear.png"))); // NOI18N
+        jButton4.setText("Clear");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        jButton5.setFont(new java.awt.Font("Tempus Sans ITC", 1, 14)); // NOI18N
+        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/makatihomes/Images/reserve.png"))); // NOI18N
+        jButton5.setText("Reserve");
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(36, 36, 36)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel27)
+                        .addGap(18, 18, 18)
+                        .addComponent(totalrent, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel4Layout.createSequentialGroup()
+                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLabel26, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel25, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(twomonth, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(onemonth, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(twomonthsadvancetxt, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(onemonthdeposittxt, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel4Layout.createSequentialGroup()
+                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jLabel37, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel36, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel35, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel34, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel33, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel31, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel30, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel29, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel28, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel32, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(c1)
+                                .addComponent(c3)
+                                .addComponent(c4)
+                                .addComponent(c5)
+                                .addComponent(c6)
+                                .addGroup(jPanel4Layout.createSequentialGroup()
+                                    .addComponent(c7)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(ic7))
+                                .addComponent(c8)
+                                .addComponent(c9)
+                                .addComponent(c10)
+                                .addGroup(jPanel4Layout.createSequentialGroup()
+                                    .addComponent(c2)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(ic2))))))
+                .addGap(49, 49, 49)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(useadv)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dateadv, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(usedpt)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(datedpt)))
+                .addContainerGap(210, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(save)
+                .addGap(18, 18, 18)
+                .addComponent(jButton4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton5)
+                .addGap(142, 142, 142))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(29, 29, 29)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel25)
+                    .addComponent(twomonth)
+                    .addComponent(twomonthsadvancetxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(useadv)
+                    .addComponent(dateadv, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel26)
+                    .addComponent(onemonth)
+                    .addComponent(onemonthdeposittxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(usedpt)
+                    .addComponent(datedpt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(totalrent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel27))
+                .addGap(40, 40, 40)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel28)
+                    .addComponent(c1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel29)
+                    .addComponent(c2)
+                    .addComponent(ic2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel30)
+                    .addComponent(c3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel31)
+                    .addComponent(c4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel32)
+                    .addComponent(c5))
+                .addGap(14, 14, 14)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel33)
+                    .addComponent(c6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel34)
+                    .addComponent(c7)
+                    .addComponent(ic7))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel35)
+                    .addComponent(c8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel36)
+                    .addComponent(c9))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel37)
+                    .addComponent(c10))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(save)
+                    .addComponent(jButton4)
+                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(124, Short.MAX_VALUE))
+        );
+
+        tab.addTab("Requirements", jPanel4);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(tab)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(tab)
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void occuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_occuActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_occuActionPerformed
+
+    private void nocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nocActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_nocActionPerformed
+
+    private void soeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_soeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_soeActionPerformed
+
+    private void osoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_osoiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_osoiActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+     tab.setSelectedIndex(1);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    tab.setSelectedIndex(2);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void unitcomboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unitcomboActionPerformed
+
+    }//GEN-LAST:event_unitcomboActionPerformed
+
+    private void buildingcomboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buildingcomboActionPerformed
+        UnitCombo();
+    }//GEN-LAST:event_buildingcomboActionPerformed
+
+    private void twomonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_twomonthActionPerformed
+               try{
+            String sql = "Select * from monthlyrentals";
+            pst = conn.prepareStatement(sql);
+            rs = pst.executeQuery();
+            while(rs.next()){
+                String amount = rs.getString("monthlyamount");
+                int amounts;
+                int total;
+                amounts = Integer.parseInt(amount.toString());
+                total = amounts + amounts;                
+                twomonthh = Integer.toString(total);
+                twomonthsadvancetxt.setText(twomonthh);
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, e);
+        }
+        
+    }//GEN-LAST:event_twomonthActionPerformed
+
+    private void onemonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onemonthActionPerformed
+        try{
+            String sql = "Select * from monthlyrentals";
+            pst = conn.prepareStatement(sql);
+            rs = pst.executeQuery();
+            while(rs.next()){
+                String amount = rs.getString("monthlyamount");
+                int amounts;
+                amounts = Integer.parseInt(amount.toString());
+                onemonthh = Integer.toString(amounts);
+                onemonthdeposittxt.setText(onemonthh);
+                
+                String twomanti = twomonthsadvancetxt.getText();
+                int tumant = Integer.parseInt(twomanti);
+                int totalrenta = amounts + tumant;
+                totalrent.setText("₱ "+Integer.toString(totalrenta));
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }//GEN-LAST:event_onemonthActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        fname.setText("");
+        mname.setText("");
+        lname.setText("");
+        contact.setText("+63");
+        civilbox.setSelectedIndex(0);
+        dob.setText("yyyy-MM-dd");
+        genderbox.setSelectedIndex(0);
+        occu.setText("");
+        noc.setText("");
+        soe.setText("");
+        osoi.setText("");
+        nos.setText("");
+        occus.setText("");
+        nocs.setText("");
+        contacts.setText("");
+        soes.setText("");
+        osois.setText("");
+        nod.setText("");
+        buttonGroup1.clearSelection();
+        buttonGroup2.clearSelection();
+        buttonGroup3.clearSelection();
+        buttonGroup4.clearSelection();
+        buttonGroup5.clearSelection();
+        buttonGroup6.clearSelection();
+        buttonGroup7.clearSelection();
+        buttonGroup8.clearSelection();
+        buttonGroup9.clearSelection();
+        buttonGroup10.clearSelection();
+        buildingcombo.setSelectedIndex(0);
+        unitcombo.setSelectedIndex(0);
+        twomonth.setSelected(false);
+        onemonth.setSelected(false);
+        dateadv.setText("yyyy-MM-dd");
+        datedpt.setText("yyyy-MM-dd");
+        oldnew.setSelectedIndex(0);
+        datestart.setText("");
+        dateend.setText("");
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void civilboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_civilboxActionPerformed
+        CSDisable();
+    }//GEN-LAST:event_civilboxActionPerformed
+
+    private void useadvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_useadvActionPerformed
+       if(useadv.isSelected() == false){
+         dateadv.setEnabled(false);
+     }else{
+         dateadv.setEnabled(true);
+     }
+    }//GEN-LAST:event_useadvActionPerformed
+
+    private void usedptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usedptActionPerformed
+      if(usedpt.isSelected() == false){
+         datedpt.setEnabled(false);
+     }else{
+         datedpt.setEnabled(true);
+     }
+    }//GEN-LAST:event_usedptActionPerformed
+
+    private void oldnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_oldnewActionPerformed
+       if(oldnew.getSelectedItem().toString().equals("Select")){
+            JOptionPane.showMessageDialog(null, "Select Type of tenant","Error",JOptionPane.ERROR_MESSAGE);
+        }else if(oldnew.getSelectedItem().toString().equals("Old")){
+            
+           
+            datestart.setText("");
+            dateend.setText("");
+            useadv.setEnabled(true);
+            usedpt.setEnabled(true);
+            dateadv.setEnabled(true);
+            datedpt.setEnabled(true);
+            useadv.setSelected(false);
+            usedpt.setSelected(false);
+            dateadv.setEnabled(false);
+            datedpt.setEnabled(false);
+            twomonth.setSelected(false);
+            onemonth.setSelected(false);
+            useadv.setSelected(false);
+            usedpt.setSelected(false);
+            dateadv.setText("yyyy-MM-dd");
+            datedpt.setText("yyyy-MM-dd");
+            datestart.setText("");
+            dateend.setText("");
+        }else if(oldnew.getSelectedItem().toString().equals("New")){
+            buttonGroup1.clearSelection();
+            c1.setEnabled(true);
+            buttonGroup2.clearSelection();
+            c2.setEnabled(true);
+            buttonGroup3.clearSelection();
+            c3.setEnabled(true);
+            buttonGroup4.clearSelection();
+            c4.setEnabled(true);
+            buttonGroup5.clearSelection();
+            c5.setEnabled(true);
+            buttonGroup6.clearSelection();
+            c6.setEnabled(true);
+            buttonGroup7.clearSelection();
+            c7.setEnabled(true);
+            buttonGroup8.clearSelection();
+            c8.setEnabled(true);
+            buttonGroup9.clearSelection();
+            c9.setEnabled(true);
+            buttonGroup10.clearSelection();
+            c10.setEnabled(true);
+            twomonth.setEnabled(true);
+            onemonth.setEnabled(true);
+            String petsa = datesss;
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d");
+            LocalDate datetoday = LocalDate.parse(petsa,formatter);
+            LocalDate yearlater = datetoday.plusYears(1);
+            String gago = datetoday.format(formatter);
+            String tanga = yearlater.format(formatter);
+            datestart.setText(gago);
+            dateend.setText(tanga);
+            useadv.setEnabled(false);
+            usedpt.setEnabled(false);
+            dateadv.setEnabled(false);
+            datedpt.setEnabled(false);
+            useadv.setSelected(false);
+            usedpt.setSelected(false);
+            twomonth.setSelected(false);
+            onemonth.setSelected(false);
+            dateadv.setText("yyyy-MM-dd");
+            datedpt.setText("yyyy-MM-dd");
+            
+        }       
+    }//GEN-LAST:event_oldnewActionPerformed
+
+    private void datestartKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_datestartKeyReleased
+            String petsa = datestart.getText();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d");
+            LocalDate datetoday = LocalDate.parse(petsa,formatter);
+            LocalDate yearlater = datetoday.plusYears(1);
+            String tanga = yearlater.format(formatter);
+            dateend.setText(tanga);
+    }//GEN-LAST:event_datestartKeyReleased
+
+    private void saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveActionPerformed
+        
+            try{
+            String dateFormat = "\\d{4}-\\d{2}-\\d{2}";
+            String dobb = dob.getText();
+            if(fname.getText().equals("")){
+                JOptionPane.showMessageDialog(null, "Fill up Firstname","Error",JOptionPane.ERROR_MESSAGE);
+                fname.setText("");
+            }else if(mname.getText().equals("")){
+                JOptionPane.showMessageDialog(null, "Fill up Middlename","Error",JOptionPane.ERROR_MESSAGE);
+                mname.setText("");
+            }else if(lname.getText().equals("")){
+                JOptionPane.showMessageDialog(null, "Fill up Lastname","Error",JOptionPane.ERROR_MESSAGE);
+                lname.setText("");
+            }else if(contact.getText().equals("")){
+                JOptionPane.showMessageDialog(null, "Fill up Contact","Error",JOptionPane.ERROR_MESSAGE);
+                contact.setText("");
+            }else if(dob.getText().equals("yyyy-MM-dd")){
+                JOptionPane.showMessageDialog(null, "Fill up Date of Birth","Error",JOptionPane.ERROR_MESSAGE);
+                dob.setText("yyyy-MM-dd");
+            }else if(!dobb.matches(dateFormat)){
+                JOptionPane.showMessageDialog(null, "Error Birth Date Format","Error",JOptionPane.ERROR_MESSAGE);
+                dob.setText("yyy-MM-dd");
+            }else if(occu.getText().equals("")){
+                JOptionPane.showMessageDialog(null, "Fill up Occupation","Error",JOptionPane.ERROR_MESSAGE);
+                occu.setText("");
+            }else if (noc.getText().equals("")){
+                JOptionPane.showMessageDialog(null, "Fill up Name of Company","Error",JOptionPane.ERROR_MESSAGE);
+                noc.setText("");
+            }else if (soe.getText().equals("")){
+                JOptionPane.showMessageDialog(null, "Fill up Status of Employment","Error",JOptionPane.ERROR_MESSAGE);
+                soe.setText("");
+            }else if(osoi.getText().equals("")){
+                JOptionPane.showMessageDialog(null, "Fill up Other Source of Income","Error",JOptionPane.ERROR_MESSAGE);
+                osoi.setText("");
+            }else if(nos.getText().equals("")){
+                JOptionPane.showMessageDialog(null, "Fill up Name of Spouse","Error",JOptionPane.ERROR_MESSAGE);
+                nos.setText("");
+            }else if(occus.getText().equals("")){
+                JOptionPane.showMessageDialog(null, "Fill up Spouse Occupation","Error",JOptionPane.ERROR_MESSAGE);
+                occus.setText("");
+            }else if(nocs.getText().equals("")){
+                JOptionPane.showMessageDialog(null, "Fill up Spouse Name of Company","Error",JOptionPane.ERROR_MESSAGE);
+                nos.setText("");
+            }else if(contacts.getText().equals("")){
+                JOptionPane.showMessageDialog(null, "Fill up Spouse Contact","Error",JOptionPane.ERROR_MESSAGE);
+                contacts.setText("");
+            }else if(soes.getText().equals("")){
+                JOptionPane.showMessageDialog(null, "Fill up Spouse Status of Employment","Error",JOptionPane.ERROR_MESSAGE);
+                soes.setText("");
+            }else if(nod.getText().equals("")){
+                JOptionPane.showMessageDialog(null, "Fill up Number of Dependents","Error",JOptionPane.ERROR_MESSAGE);
+                nod.setText("");
+            }else if(buildingcombo.getSelectedItem().toString().equals("Select Building")){
+                JOptionPane.showMessageDialog(null, "Select Building","Error",JOptionPane.ERROR_MESSAGE);
+                buildingcombo.setSelectedIndex(0);
+            }else if(unitcombo.getSelectedItem().toString().equals("Select Unit")){
+                JOptionPane.showMessageDialog(null, "Select Unit","Error",JOptionPane.ERROR_MESSAGE);
+                unitcombo.setSelectedIndex(0);
+            }else if(c1.isSelected() == false) {
+                JOptionPane.showMessageDialog(null, "Check the checkbox GISS/SSS","Error",JOptionPane.ERROR_MESSAGE);
+                buttonGroup1.clearSelection();
+            }else if(c2.isSelected() == false && ic2.isSelected() == false){
+                JOptionPane.showMessageDialog(null, "Check the checkbox Marriage Contract","Error",JOptionPane.ERROR_MESSAGE);
+                buttonGroup2.clearSelection();
+            }else if(c3.isSelected() == false ){
+                JOptionPane.showMessageDialog(null, "Check the checkbox Income Tax Return","Error",JOptionPane.ERROR_MESSAGE);
+                buttonGroup3.clearSelection();
+            }else if(c4.isSelected() == false ){
+                JOptionPane.showMessageDialog(null, "Check the checkbox Voters Affidavit","Error",JOptionPane.ERROR_MESSAGE);
+                buttonGroup4.clearSelection();
+            }else if(c5.isSelected() == false ){
+                JOptionPane.showMessageDialog(null, "Check the checkbox Certificate of Employment","Error",JOptionPane.ERROR_MESSAGE);
+                buttonGroup5.clearSelection();
+            }else if(c6.isSelected() == false ){
+                JOptionPane.showMessageDialog(null, "Check the checkbox Barangay Certificate","Error",JOptionPane.ERROR_MESSAGE);
+                buttonGroup6.clearSelection();
+            }else if(c7.isSelected() == false && ic7.isSelected() == false){
+                JOptionPane.showMessageDialog(null, "Check the checkbox Family Picture","Error",JOptionPane.ERROR_MESSAGE);
+                buttonGroup7.clearSelection();
+            }else if(c8.isSelected() == false ){
+                JOptionPane.showMessageDialog(null, "Check the checkbox Birth Certificate","Error",JOptionPane.ERROR_MESSAGE);
+                buttonGroup8.clearSelection();
+            }else if(c9.isSelected() == false ){
+                JOptionPane.showMessageDialog(null, "Check the checkbox Cedula","Error",JOptionPane.ERROR_MESSAGE);
+                buttonGroup9.clearSelection();
+            }else if(c10.isSelected() == false ){
+                JOptionPane.showMessageDialog(null, "Check the checkbox Late Payslip","Error",JOptionPane.ERROR_MESSAGE);
+                buttonGroup10.clearSelection();
+            }else if(twomonth.isSelected() == false){
+                JOptionPane.showMessageDialog(null, "Two months advance must be selected","Error",JOptionPane.ERROR_MESSAGE);
+                twomonth.setSelected(false);
+            }else if(onemonth.isSelected() == false){
+                JOptionPane.showMessageDialog(null, "One month deposit must be selected","Error",JOptionPane.ERROR_MESSAGE);
+                onemonth.setSelected(false);
+            }else if(oldnew.getSelectedItem().toString().equals("Old")){
+                try{
+                    String unitcombobo = unitcombo.getSelectedItem().toString();
+                String buildingcombobo = buildingcombo.getSelectedItem().toString();
+                String unitid1 = "select * from buildingunits where unitNumber = '"+unitcombobo+"' and buildingName = '"+buildingcombobo+"'";
+                pst = conn.prepareStatement(unitid1);
+                rs = pst.executeQuery(unitid1);
+                while(rs.next()){
+                    String unitid2 = rs.getString("unitID");
+                    String buildingid = rs.getString("buildingID");
+                    String sql = "Insert into tenantsinformation (fname,mname,lname,contact,dob,gender,cs,occup,noc,soe,osoi,nos,occups,nocs,contacts,soes,osois,nod,giss,mc,itr,va,coe,bcs,fp,bc,ctc,lp,unitID,unitNumber,buildingID,buildingName,dateStarted,dateEnded) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    pst = conn.prepareStatement(sql);
+                    pst.setString(1, fname.getText());
+                    pst.setString(2, mname.getText());
+                    pst.setString(3, lname.getText());
+                    pst.setString(4, contact.getText());
+                    pst.setString(5, dob.getText());
+                    pst.setString(6, genderbox.getSelectedItem().toString());
+                    pst.setString(7, civilbox.getSelectedItem().toString());
+                    pst.setString(8, occu.getText());
+                    pst.setString(9, noc.getText());
+                    pst.setString(10, soe.getText());
+                    pst.setString(11, osoi.getText());
+                    pst.setString(12, nos.getText());
+                    pst.setString(13, occus.getText());
+                    pst.setString(14, nocs.getText());
+                    pst.setString(15, contacts.getText());
+                    pst.setString(16, soes.getText());
+                    pst.setString(17, osois.getText());
+                    pst.setString(18, nod.getText());
+                    pst.setString(19, checkuncheck);
+                    pst.setString(20, checkuncheck);
+                    pst.setString(21, checkuncheck);
+                    pst.setString(22, checkuncheck);
+                    pst.setString(23, checkuncheck);
+                    pst.setString(24, checkuncheck);
+                    pst.setString(25, checkuncheck);
+                    pst.setString(26, checkuncheck);
+                    pst.setString(27, checkuncheck);
+                    pst.setString(28, checkuncheck);
+                    pst.setString(29, unitid2);
+                    pst.setString(30, unitcombo.getSelectedItem().toString());
+                    pst.setString(31, buildingid);
+                    pst.setString(32, buildingcombo.getSelectedItem().toString());
+                    pst.setString(33, datestart.getText());
+                    pst.setString(34, dateend.getText());
+                    pst.execute();
+                    JOptionPane.showMessageDialog(null, "Old Tenants Successfully Added","Sucess",JOptionPane.INFORMATION_MESSAGE);
+
+                }
+                }catch(Exception e){
+                    JOptionPane.showMessageDialog(null, e);
+                }
+            }
+            else{
+                String unitcombobo = unitcombo.getSelectedItem().toString();
+                String buildingcombobo = buildingcombo.getSelectedItem().toString();
+                String unitid1 = "select * from buildingunits where unitNumber = '"+unitcombobo+"' and buildingName = '"+buildingcombobo+"'";
+                pst = conn.prepareStatement(unitid1);
+                rs = pst.executeQuery(unitid1);
+                while(rs.next()){
+                    String unitid2 = rs.getString("unitID");
+                    String buildingid = rs.getString("buildingID");
+                    String sql = "Insert into tenantsinformation (fname,mname,lname,contact,dob,gender,cs,occup,noc,soe,osoi,nos,occups,nocs,contacts,soes,osois,nod,giss,mc,itr,va,coe,bcs,fp,bc,ctc,lp,unitID,unitNumber,buildingID,buildingName,dateStarted,dateEnded) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    pst = conn.prepareStatement(sql);
+                    pst.setString(1, fname.getText());
+                    pst.setString(2, mname.getText());
+                    pst.setString(3, lname.getText());
+                    pst.setString(4, contact.getText());
+                    pst.setString(5, dob.getText());
+                    pst.setString(6, genderbox.getSelectedItem().toString());
+                    pst.setString(7, civilbox.getSelectedItem().toString());
+                    pst.setString(8, occu.getText());
+                    pst.setString(9, noc.getText());
+                    pst.setString(10, soe.getText());
+                    pst.setString(11, osoi.getText());
+                    pst.setString(12, nos.getText());
+                    pst.setString(13, occus.getText());
+                    pst.setString(14, nocs.getText());
+                    pst.setString(15, contacts.getText());
+                    pst.setString(16, soes.getText());
+                    pst.setString(17, osois.getText());
+                    pst.setString(18, nod.getText());
+                    pst.setString(19, checkuncheck);
+                    pst.setString(20, checkuncheck);
+                    pst.setString(21, checkuncheck);
+                    pst.setString(22, checkuncheck);
+                    pst.setString(23, checkuncheck);
+                    pst.setString(24, checkuncheck);
+                    pst.setString(25, checkuncheck);
+                    pst.setString(26, checkuncheck);
+                    pst.setString(27, checkuncheck);
+                    pst.setString(28, checkuncheck);
+                    pst.setString(29, unitid2);
+                    pst.setString(30, unitcombo.getSelectedItem().toString());
+                    pst.setString(31, buildingid);
+                    pst.setString(32, buildingcombo.getSelectedItem().toString());
+                    pst.setString(33, datestart.getText());
+                    pst.setString(34, dateend.getText());
+                    pst.execute();
+                    JOptionPane.showMessageDialog(null, "Tenants Successfully Added","Sucess",JOptionPane.INFORMATION_MESSAGE);
+
+                }
+
+            }
+
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, e);
+        }
+            //End of Inserting Tenants
+
+        try{
+            String dateFormat = "\\d{4}-\\d{2}-\\d{2}";
+            String dobb = dob.getText();
+            if(fname.getText().equals("")){
+
+            }else if(mname.getText().equals("")){
+
+            }else if(lname.getText().equals("")){
+
+            }else if(contact.getText().equals("")){
+
+            }else if(dob.getText().equals("yyyy-MM-dd")){
+
+            }else if(!dobb.matches(dateFormat)){
+
+            }else if(occu.getText().equals("")){
+
+            }else if (noc.getText().equals("")){
+
+            }else if (soe.getText().equals("")){
+
+            }else if(osoi.getText().equals("")){
+
+            }else if(nos.getText().equals("")){
+
+            }else if(occus.getText().equals("")){
+
+            }else if(nocs.getText().equals("")){
+
+            }else if(contacts.getText().equals("")){
+
+            }else if(soes.getText().equals("")){
+
+            }else if(nos.getText().equals("")){
+
+            }else if(buildingcombo.getSelectedItem().toString().equals("Select Building")){
+
+            }else if(unitcombo.getSelectedItem().toString().equals("Select Unit")){
+
+            }else if(c1.isSelected() == false ) {
+
+            }else if(c2.isSelected() == false && ic2.isSelected() == false){
+
+            }else if(c3.isSelected() == false ){
+
+            }else if(c4.isSelected() == false ){
+
+            }else if(c5.isSelected() == false ){
+
+            }else if(c6.isSelected() == false ){
+
+            }else if(c7.isSelected() == false && ic7.isSelected() == false){
+
+            }else if(c8.isSelected() == false ){
+
+            }else if(c9.isSelected() == false ){
+
+            }else if(c10.isSelected() == false ){
+
+            }else if(twomonth.isSelected() == false){
+                
+            }else if(onemonth.isSelected() == false){
+                
+            }
+            else{
+                //Query the selected item  in combobox
+                String unitcombobo  = unitcombo.getSelectedItem().toString();
+                String buildingcombobo = buildingcombo.getSelectedItem().toString();
+                String unitandbuildingid = "select * from buildingunits where unitNumber ='"+unitcombobo+"' and buildingName = '"+buildingcombobo+"'";
+                pst = conn.prepareStatement(unitandbuildingid);
+                rs = pst.executeQuery(unitandbuildingid);
+                while(rs.next()){
+                    //get the buildingid and unitid of the selected item in combobox
+                    String buildingid = rs.getString("buildingID");
+                    String unitid = rs.getString("unitID");
+                    //then update
+                    String sql = "Update buildingunits SET unitStatus = 'Occupied' where buildingID = '"+buildingid+"' and unitID = '"+unitid+"'";
+                    pst = conn.prepareStatement(sql);
+                    pst.execute();
+                }
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, e);
+        }
+        //End Updating the buildingunit
+        try{
+           String dateFormat = "\\d{4}-\\d{2}-\\d{2}";
+            String dobb = dob.getText();
+            if(fname.getText().equals("")){
+
+            }else if(mname.getText().equals("")){
+
+            }else if(lname.getText().equals("")){
+
+            }else if(contact.getText().equals("")){
+
+            }else if(dob.getText().equals("yyyy-MM-dd")){
+
+            }else if(!dobb.matches(dateFormat)){
+
+            }else if(occu.getText().equals("")){
+
+            }else if (noc.getText().equals("")){
+
+            }else if (soe.getText().equals("")){
+
+            }else if(osoi.getText().equals("")){
+
+            }else if(nos.getText().equals("")){
+
+            }else if(occus.getText().equals("")){
+
+            }else if(nocs.getText().equals("")){
+
+            }else if(contacts.getText().equals("")){
+
+            }else if(soes.getText().equals("")){
+
+            }else if(nos.getText().equals("")){
+
+            }else if(buildingcombo.getSelectedItem().toString().equals("Select Building")){
+
+            }else if(unitcombo.getSelectedItem().toString().equals("Select Unit")){
+
+            }else if(c1.isSelected() == false ) {
+
+            }else if(c2.isSelected() == false && ic2.isSelected() == false){
+
+            }else if(c3.isSelected() == false ){
+
+            }else if(c4.isSelected() == false ){
+
+            }else if(c5.isSelected() == false ){
+
+            }else if(c6.isSelected() == false ){
+
+            }else if(c7.isSelected() == false && ic7.isSelected() == false){
+
+            }else if(c8.isSelected() == false ){
+
+            }else if(c9.isSelected() == false ){
+
+            }else if(c10.isSelected() == false ){
+
+            }else if(twomonth.isSelected() == false){
+                
+            }else if(onemonth.isSelected() == false){
+                
+            }else if(oldnew.getSelectedItem().toString().equals("Old")){
+                try{
+                    if(useadv.isSelected() == true){
+                    String sql = "insert into advpay(tenantsID,advAmount,date,paid) values (LAST_INSERT_ID(),'0',?,'Used')";
+                    pst = conn.prepareStatement(sql);
+                    pst.setString(1, dateadv.getText());
+                    pst.execute();
+                }else if(useadv.isSelected() == false){
+                    String sql = "insert into advpay (tenantsID,advAmount,date,paid) values (LAST_INSERT_ID(),?,?,'Paid')";
+                    pst = conn.prepareStatement(sql);
+                    pst.setString(1, twomonthh);
+                    pst.setString(2, date.getText());
+                    pst.execute();
+                }
+                }catch(Exception e){
+                    JOptionPane.showMessageDialog(null, e,"oldadvselect",JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            else{
+                String sql = "insert into advpay (tenantsID,advAmount,date,paid) values (LAST_INSERT_ID(),?,?,'Paid')";
+                pst = conn.prepareStatement(sql);
+                pst.setString(1, twomonthh);
+                pst.setString(2, date.getText());
+                pst.execute();
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, e);
+        }
+        //End of old tenants advance payment
+        try{
+            String dateFormat = "\\d{4}-\\d{2}-\\d{2}";
+            String dobb = dob.getText();
+            if(fname.getText().equals("")){
+
+            }else if(mname.getText().equals("")){
+
+            }else if(lname.getText().equals("")){
+
+            }else if(contact.getText().equals("")){
+
+            }else if(dob.getText().equals("yyyy-MM-dd")){
+
+            }else if(!dobb.matches(dateFormat)){
+
+            }else if(occu.getText().equals("")){
+
+            }else if (noc.getText().equals("")){
+
+            }else if (soe.getText().equals("")){
+
+            }else if(osoi.getText().equals("")){
+
+            }else if(nos.getText().equals("")){
+
+            }else if(occus.getText().equals("")){
+
+            }else if(nocs.getText().equals("")){
+
+            }else if(contacts.getText().equals("")){
+
+            }else if(soes.getText().equals("")){
+
+            }else if(nos.getText().equals("")){
+
+            }else if(buildingcombo.getSelectedItem().toString().equals("Select Building")){
+
+            }else if(unitcombo.getSelectedItem().toString().equals("Select Unit")){
+
+            }else if(c1.isSelected() == false ) {
+
+            }else if(c2.isSelected() == false && ic2.isSelected() == false){
+
+            }else if(c3.isSelected() == false ){
+
+            }else if(c4.isSelected() == false ){
+
+            }else if(c5.isSelected() == false ){
+
+            }else if(c6.isSelected() == false ){
+
+            }else if(c7.isSelected() == false && ic7.isSelected() == false){
+
+            }else if(c8.isSelected() == false ){
+
+            }else if(c9.isSelected() == false ){
+
+            }else if(c10.isSelected() == false ){
+
+            }else if(twomonth.isSelected() == false){
+                
+            }else if(onemonth.isSelected() == false){
+                
+            }else if(oldnew.getSelectedItem().toString().equals("Old")){
+                try{
+                    if(usedpt.isSelected() == true){
+                    String sql = "insert into deposit(tenantsID,dptAmount,date,paid) values (LAST_INSERT_ID(),'0',?,'Used')";
+                    pst = conn.prepareStatement(sql);
+                    pst.setString(1, datedpt.getText());
+                    pst.execute();
+                }else if(usedpt.isSelected() == false){
+                    String sql = "insert into deposit (tenantsID,dptAmount,date,paid) values (LAST_INSERT_ID(),?,?,'Paid')";
+                    pst = conn.prepareStatement(sql);
+                    pst.setString(1, onemonthh);
+                    pst.setString(2, date.getText());
+                    pst.execute();
+                }
+                    
+                }catch(Exception e){
+                    JOptionPane.showMessageDialog(null, e);
+                }
+            }
+            else{
+                String sql = "insert into deposit (tenantsID,dptAmount,date,paid) values (LAST_INSERT_ID(),?,?,'Paid')";
+                pst = conn.prepareStatement(sql);
+                pst.setString(1, onemonthh);
+                pst.setString(2, date.getText());
+                pst.execute();
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, e);
+        }
+        //End of old tenant deposit
+        try{
+            String dateFormat = "\\d{4}-\\d{2}-\\d{2}";
+            String dobb = dob.getText();
+            if(fname.getText().equals("")){
+
+            }else if(mname.getText().equals("")){
+
+            }else if(lname.getText().equals("")){
+
+            }else if(contact.getText().equals("")){
+
+            }else if(dob.getText().equals("yyyy-MM-dd")){
+
+            }else if(!dobb.matches(dateFormat)){
+
+            }else if(occu.getText().equals("")){
+
+            }else if (noc.getText().equals("")){
+
+            }else if (soe.getText().equals("")){
+
+            }else if(osoi.getText().equals("")){
+
+            }else if(nos.getText().equals("")){
+
+            }else if(occus.getText().equals("")){
+
+            }else if(nocs.getText().equals("")){
+
+            }else if(contacts.getText().equals("")){
+
+            }else if(soes.getText().equals("")){
+
+            }else if(nos.getText().equals("")){
+
+            }else if(buildingcombo.getSelectedItem().toString().equals("Select Building")){
+
+            }else if(unitcombo.getSelectedItem().toString().equals("Select Unit")){
+
+            }else if(c1.isSelected() == false ) {
+
+            }else if(c2.isSelected() == false && ic2.isSelected() == false){
+
+            }else if(c3.isSelected() == false ){
+
+            }else if(c4.isSelected() == false ){
+
+            }else if(c5.isSelected() == false ){
+
+            }else if(c6.isSelected() == false ){
+
+            }else if(c7.isSelected() == false && ic7.isSelected() == false){
+
+            }else if(c8.isSelected() == false ){
+
+            }else if(c9.isSelected() == false ){
+
+            }else if(c10.isSelected() == false ){
+
+            }else if(twomonth.isSelected() == false){
+                
+            }else if(onemonth.isSelected() == false){
+                
+            }else if(oldnew.getSelectedItem().toString().equals("Old")){
+                
+            }
+            else if(oldnew.getSelectedItem().toString().equals("New")){
+           String fnames1 = fname.getText();
+           String mnames1 = mname.getText();
+           String lnames1 = lname.getText();
+           File file = new File("C:\\Users\\GameDev\\Documents\\NetBeansProjects\\Makatihomes2\\Reports\\Reciept\\"+fnames1+" "+mnames1+" "+lnames1+"");
+           if(!file.exists()){
+               if(file.mkdir()){
+                   
+               }else{
+                   
+               }
+           }
+           String fnames = fname.getText();
+           String mnames = mname.getText();
+           String lnames = lname.getText();
+           String destination = "C:\\Users\\GameDev\\Documents\\NetBeansProjects\\Makatihomes2\\Reports\\Reciept\\"+fnames1+" "+mnames1+" "+lnames1+"\\"+fnames+" "+mnames+" "+lnames+".pdf";
+           String buildingcmb = buildingcombo.getSelectedItem().toString();
+           JasperDesign jd = JRXmlLoader.load("C:\\Users\\GameDev\\Documents\\NetBeansProjects\\Makatihomes2\\Reports\\TenantReciept.jrxml");
+           String sql = "SELECT\n" +
+"\n" +
+"     tenantsinformation.`fname` AS tenantsinformation_fname,\n" +
+"     tenantsinformation.`lname` AS tenantsinformation_lname,\n" +
+"     tenantsinformation.`mname` AS tenantsinformation_mname,\n" +
+"     tenantsinformation.`unitNumber` AS tenantsinformation_unitNumber,\n" +
+"     tenantsinformation.`buildingName` AS tenantsinformation_buildingName,\n" +
+"     advpay.`tenantsID` AS advpay_tenantsID,\n" +
+"     advpay.`advAmount` AS advpay_advAmount,\n" +
+"     advpay.`date` AS advpay_date,\n" +
+"     deposit.`tenantsID` AS deposit_tenantsID,\n" +
+"     deposit.`dptAmount` AS deposit_dptAmount\n" +
+"FROM\n" +
+"     `tenantsinformation` tenantsinformation INNER JOIN `advpay` advpay ON tenantsinformation.`tenantsID` = advpay.`tenantsID`\n" +
+"     INNER JOIN `deposit` deposit ON tenantsinformation.`tenantsID` = deposit.`tenantsID`\n" +
+"WHERE\n" +
+"     tenantsinformation.`tenantsID` = LAST_INSERT_ID()";
+           JRDesignQuery newQuery = new JRDesignQuery();
+           newQuery.setText(sql);
+           jd.setQuery(newQuery);
+           JasperReport jr = JasperCompileManager.compileReport(jd);
+           JasperPrint jp = JasperFillManager.fillReport(jr, null,conn);     
+           JasperViewer.viewReport(jp,false);
+           JasperExportManager.exportReportToPdfFile(jp, destination);
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, e);
+        }
+        //Twilio
+        try{
+                    String dateFormat = "\\d{4}-\\d{2}-\\d{2}";
+            String dobb = dob.getText();
+            if(fname.getText().equals("")){
+
+            }else if(mname.getText().equals("")){
+
+            }else if(lname.getText().equals("")){
+
+            }else if(contact.getText().equals("")){
+
+            }else if(dob.getText().equals("yyyy-MM-dd")){
+
+            }else if(!dobb.matches(dateFormat)){
+
+            }else if(occu.getText().equals("")){
+
+            }else if (noc.getText().equals("")){
+
+            }else if (soe.getText().equals("")){
+
+            }else if(osoi.getText().equals("")){
+
+            }else if(nos.getText().equals("")){
+
+            }else if(occus.getText().equals("")){
+
+            }else if(nocs.getText().equals("")){
+
+            }else if(contacts.getText().equals("")){
+
+            }else if(soes.getText().equals("")){
+
+            }else if(nos.getText().equals("")){
+
+            }else if(buildingcombo.getSelectedItem().toString().equals("Select Building")){
+
+            }else if(unitcombo.getSelectedItem().toString().equals("Select Unit")){
+
+            }else if(c1.isSelected() == false ) {
+
+            }else if(c2.isSelected() == false && ic2.isSelected() == false){
+
+            }else if(c3.isSelected() == false ){
+
+            }else if(c4.isSelected() == false ){
+
+            }else if(c5.isSelected() == false ){
+
+            }else if(c6.isSelected() == false ){
+
+            }else if(c7.isSelected() == false && ic7.isSelected() == false){
+
+            }else if(c8.isSelected() == false ){
+
+            }else if(c9.isSelected() == false){
+
+            }else if(c10.isSelected() == false ){
+
+            }else if(twomonth.isSelected() == false){
+                
+            }else if(onemonth.isSelected() == false){
+                
+            }else{
+        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);    
+        String firstname = fname.getText();
+        String lastname = lname.getText();
+        String starto = datestart.getText();
+        String endo = dateend.getText();
+        String getnumber = contact.getText();
+        String getbuilding = buildingcombo.getSelectedItem().toString();
+        String getunit = unitcombo.getSelectedItem().toString();
+        Message message = Message.creator(new PhoneNumber(getnumber),//reciever
+        new PhoneNumber("+18563676862"), //sender
+        "Thank you "+firstname+" "+lastname+" you have been successfuly registered. Your Rent Info will Start DateStart:"+starto+" to DateEnd:"+endo+",Building:"+getbuilding+" UnitRoomNumber:"+getunit+" ").create();
+        System.out.println(message.getSid());
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, e);
+        }
+        
+    }//GEN-LAST:event_saveActionPerformed
+
+    private void listtenantsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listtenantsActionPerformed
+        new ListTenants().setVisible(true);
+        
+    }//GEN-LAST:event_listtenantsActionPerformed
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> buildingcombo;
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.ButtonGroup buttonGroup10;
+    private javax.swing.ButtonGroup buttonGroup11;
+    private javax.swing.ButtonGroup buttonGroup12;
+    private javax.swing.ButtonGroup buttonGroup2;
+    private javax.swing.ButtonGroup buttonGroup3;
+    private javax.swing.ButtonGroup buttonGroup4;
+    private javax.swing.ButtonGroup buttonGroup5;
+    private javax.swing.ButtonGroup buttonGroup6;
+    private javax.swing.ButtonGroup buttonGroup7;
+    private javax.swing.ButtonGroup buttonGroup8;
+    private javax.swing.ButtonGroup buttonGroup9;
+    private javax.swing.JRadioButton c1;
+    private javax.swing.JRadioButton c10;
+    private javax.swing.JRadioButton c2;
+    private javax.swing.JRadioButton c3;
+    private javax.swing.JRadioButton c4;
+    private javax.swing.JRadioButton c5;
+    private javax.swing.JRadioButton c6;
+    private javax.swing.JRadioButton c7;
+    private javax.swing.JRadioButton c8;
+    private javax.swing.JRadioButton c9;
+    private javax.swing.JComboBox<String> civilbox;
+    private javax.swing.JTextField contact;
+    private javax.swing.JTextField contacts;
+    private javax.swing.JLabel date;
+    private javax.swing.JTextField dateadv;
+    private javax.swing.JTextField datedpt;
+    private javax.swing.JTextField dateend;
+    private javax.swing.JTextField datestart;
+    private javax.swing.JTextField dob;
+    private javax.swing.JTextField fname;
+    private javax.swing.JComboBox<String> genderbox;
+    private javax.swing.JRadioButton ic2;
+    private javax.swing.JRadioButton ic7;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel30;
+    private javax.swing.JLabel jLabel31;
+    private javax.swing.JLabel jLabel32;
+    private javax.swing.JLabel jLabel33;
+    private javax.swing.JLabel jLabel34;
+    private javax.swing.JLabel jLabel35;
+    private javax.swing.JLabel jLabel36;
+    private javax.swing.JLabel jLabel37;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JButton listtenants;
+    private javax.swing.JTextField lname;
+    private javax.swing.JTextField mname;
+    private javax.swing.JTextField noc;
+    private javax.swing.JTextField nocs;
+    private javax.swing.JTextField nod;
+    private javax.swing.JTextField nos;
+    private javax.swing.JTextField occu;
+    private javax.swing.JTextField occus;
+    private javax.swing.JComboBox<String> oldnew;
+    private javax.swing.JCheckBox onemonth;
+    private javax.swing.JTextField onemonthdeposittxt;
+    private javax.swing.JTextField osoi;
+    private javax.swing.JTextField osois;
+    private javax.swing.JButton save;
+    private javax.swing.JTextField soe;
+    private javax.swing.JTextField soes;
+    private javax.swing.JTabbedPane tab;
+    private javax.swing.JTextField totalrent;
+    private javax.swing.JCheckBox twomonth;
+    private javax.swing.JTextField twomonthsadvancetxt;
+    private javax.swing.JComboBox<String> unitcombo;
+    private javax.swing.JCheckBox useadv;
+    private javax.swing.JCheckBox usedpt;
+    // End of variables declaration//GEN-END:variables
+    private String checkuncheck;
+    private String emarriage;
+    private String epicture;
+    private String twomonthh;
+    private String onemonthh;
+    private String datesss;
+}
